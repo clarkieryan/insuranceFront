@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Insurance 'R' Us</title>
+        
+        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body ng-app="insuranceFront">
+        <div class="pure-g-r" id="main-container">
+            <div class="pure-u" id="actionBar">
+                <div>
+                    <h1>Insurance 'R' Us</h1>
+                    
+                    <h3>Enter a quote reference or</h3>
+                    <div id="getQuoteForm">
+                            <form>
+                                <input type="text" name="quoteRef" />
+                                <button type="submit" class="pure-button pure-button-primary">Get Quote</button> 
+                            </form>
+    
+                    </div>
+                    <h2>OR</h2>
+                    <h3>Start a new quote -></h3>
+                    <ul data-ng-controller="linkCtrl">
+                        <li ng-class="getClass('/')" >General Information</li>
+                        <li ng-class="getClass('/stage2')" >Customer Information</li>
+                        <li ng-class="getClass('/stage3') ">Quote Details</li>
+                        <li>Incidents</li>
+                        <li>Your Quote</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pure-u-1" id="main-content">
+                <div ng-view></div>
+
+                <script type="text/ng-template" id="index.html">
+                    <div>
+                        <h1>General information</h1>
+                        <form id="quoteForm">
+                            <div>
+                                <label for="forename">First Name:</label>
+                                <input type="text" name="forename" ng-model="customer.forename" required/>
+                            </div>
+                            <div>
+                                <label for="surname">Last Name:</label>
+                                <input type="text" name="surname" ng-model="customer.surname" required/>
+                            </div>
+                            <div>
+                                <label for="email">Email Address:</label>
+                                <input type="email" name="email" ng-model="customer.email" required />
+                            </div>
+                            <button type="submit" ng-click="save()" class="pure-button pure-button-primary">Next</button> 
+                        </form>
+                    </div>
+                </script>
+                
+                <script type="text/ng-template" id="stage2.html">
+                    <div>
+                        <h1>Customer Information</h1>
+                        <form id="quoteForm">
+                            <h3>Personal information</h3>
+                            <div>
+                                <label for="dob">Date Of Birth:</label>
+                                <input type="date" name="dob" ng-model="customer_details.dob" required/>
+                            </div>
+                            <div>
+                                <label for="occupation">Occupation:</label>
+                                <input type="text" name="occupation" ng-model="customer_details.occupation" required>
+                            </div>
+                            <div>
+                                <label for="telNumber">Telephone Number:</label>
+                                <input type="tel" name="telNumber" ng-model="customer_details.telNumber" required/>
+                            </div>
+                            <div>
+                                <label for="street">Street Name:</label>
+                                <input type="text" name="street" ng-model="customer_details.street" required/>
+                            </div>
+                            <div>
+                                <label for="city">City:</label>
+                                <input type="text" name="city" ng-model="customer_details.city" required/>
+                            </div>
+                            <div>
+                                <label for="postcode">Post Code:</label>
+                                <input type="text" name="postcode" ng-model="customer_details.postCode" required/>
+                            </div>
+                            <br />
+                            <h3>Licence Information</h3>
+                            <div>
+                                <label for="licenceType">Licence Type:</label>
+                                <input type="text" name="licenceType" ng-model="customer_details.licenceType" required/>
+                                
+                            </div>
+                            <div>
+                                <label for="licenceHeldSince">Licence held since:</label>
+                                <input type="text" name="licenceHeldSince" ng-model="customer_details.licenceHeldSince" required/>
+                            </div>
+
+                            <button type="submit" ng-click="save()" class="pure-button pure-button-primary">Next</button> 
+                        </form>
+                    </div>                  
+                </script>
+                
+                <script type="text/ng-template" id="stage3.html">
+                    <h1>Quote Details</h1>
+                    <form id="quoteForm">
+                            <div>
+                                <label for="vehicleReg">Vehicle Registration</label>
+                                <input type="text" name="vehicleReg" ng-model="quote_details.vehicleReg" required/>
+                            </div>    
+                            <div>
+                                <label for="estimatedMileage ">Estimated Mileage</label>
+                                <input type="text" name="estimatedMileage " ng-model="quote_details.estimatedMileage " required/>
+                            </div>
+                            <div>
+                                <label for="estimatedVehicleValue">Vehicle Valuation</label>
+                                <input type="number" name="estimatedVehicleValue" ng-model="quote_details.estimatedVehicleValue" required/>
+                            </div>
+                            <div>
+                                <label for="parkingLocation">Typical parking location</label>
+                                <!-- Grabbed from server - Enumeration -->
+                                <input type="text" name="parkingLocation" ng-model="quote_details.parkingLocation" required/>
+                            </div>
+                            <div>
+                                <label for="policyExcess">Policy Excess</label>
+                                <!-- Slider -->
+                                <input type="number" name="policyExcess" ng-model="quote_details.policyExcess" required/>
+                            </div>
+                            <div>
+                                <label for="breakdownCover">Breakdown Cover</label>
+                                <!-- Radio -->
+                                <input type="number" name="breakdownCover" ng-model="quote_details.breakdownCover" required/>
+                            </div>
+                            <div>
+                                <label for="windscreenCover">Windscreen Cover</label>
+                                <!-- Radio -->
+                                <input type="number" name="windscreenCover" ng-model="quote_details.windscreenCover" required/>
+                            </div>
+                            <button type="submit" ng-click="save()" class="pure-button pure-button-primary">Next</button> 
+                        </form>
+                    </div>            
+                </script>
+                <script type="text/ng-template" id="stage4.html">
+                    <h1>Quote Details</h1>
+                    <form id="quoteForm">
+                            <a href="" ng-click="addIncident()" >Add an incident</a> (If no incidents proceed to next step)
+                            <br />
+                            <br />
+                            <div ng-repeat="incident in incidents" >
+                                <h3>Incident #{{$index+1}}</h3>
+                                <a href="" ng-click="removeIncident($index)">Remove incident</a>
+                                <div>
+                                    <label for="date">Date of Incident</label>
+                                    <!-- Radio -->
+                                    <input type="date" name="date" ng-model="incident.date" required/>
+                                </div>
+                                <div>
+                                    <label for="value">Value of Incident</label>
+                                    <!-- Radio -->
+                                    <input type="number" name="value" ng-model="incident.value" required/>
+                                </div>
+                                <div>
+                                    <label for="desc">Description of Incident</label>
+                                    <!-- Radio -->
+                                    <input type="text" name="desc" ng-model="incident.desc" required/>
+                                </div>
+                                <div>
+                                    <label for="type">Type of Incident</label>
+                                    <!-- Radio -->
+                                    <input type="text" name="type" ng-model="incident.type" required/>
+                                </div>
+                            </div>  
+                            <button type="submit" ng-click="save()" class="pure-button pure-button-primary">Next</button> 
+                        </form>
+                    </div>            
+                </script>
+                
+                <script type="text/ng-template" id="quote.html">
+                    <div>
+                        <h1>Your Quote #QR00022345</h1>
+                        <h2>Premium: £xxx.xx</h2>
+                        <h3>Per Month: £xx.xx</h3>
+                        <br />
+                        <div id="quoteDetails">
+                            <h3>Personal Details</h3>
+                            <div class="pure-g-r">
+                                <div class="pure-u-1-2">
+                                    {{customer.forename}} {{customer.surname}}
+                                    <br />
+                                    {{customer_details.street}}
+                                    <br />
+                                    {{customer_details.city}}
+                                    <br />
+                                    {{customer_details.postCode}}
+                                </div>
+                                <div class="pure-u-1-2">
+                                    Licence Type: {{customer_details.licenceType}}
+                                    <br />
+                                    Licence Attained: {{customer_details.licenceHeldSince}}
+                                    <br />
+                                    Occupation: {{customer_details.occupation}}
+                                    <br />
+                                    Incidents: No Claims
+                                </div>
+                            </div>
+                            <h3>Quote Details</h3>
+                            <div class="pure-g-r">
+                                <div class="pure-u-1-2">
+                                    Vehicle Registration: BP53 WHJ
+                                    <br />
+                                    Est. Mileage: 50,000 
+                                    <br />
+                                    Est. Vehicle Valuation: £400
+                                    <br />
+                                    Parking Location: CV11 4QP
+                                </div>
+                                <div class="pure-u-1-2">
+                                    Policy Excess: £500
+                                    <br />
+                                    Breakdown Coverage: True
+                                    <br />
+                                    Windscreen Coverage: True
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+            </div>
+        </div>
+        <footer>
+            
+        </footer>
+    </body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.js"></script>
+    <script src="http://code.angularjs.org/1.2.0/angular-route.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/restangular/dist/restangular.js"></script>
+    <script src="js/app.js"></script>
+</html>
