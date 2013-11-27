@@ -140,6 +140,7 @@
                                 <input type="checkbox" name="breakdownCover" ng-model="quote_details.breakdownCover" ng-change="toggleSlider()" required/>
                             </div>
                             <div ng-show="quote_details.breakdownCover" class="tab">
+                                <!-- Update API to allow for this -->
                                 <label for="breakdownExcess">Breakdown Cover Type: </label>
                                 <select name="breakdownType" ng-model="quote_details.breakdownType">
                                     <option value="" selected>Please select one:</option>
@@ -150,6 +151,7 @@
                                 <label for="windscreenCover">Windscreen Cover</label>
                                 <input type="checkbox" name="windscreenCover" ng-model="quote_details.windscreenCover" required/>
                             </div>
+                            <!-- TODO: Update API to allow for this -->
                             <div ng-show="quote_details.windscreenCover" class="tab">
                                 <label for="windscreenExcess">Windscreen Excess: </label>
                                 <span>£{{quote_details.windscreenExcess}}</span>

@@ -48,7 +48,7 @@ function indexCtrl($scope, $location, Restangular, $cookieStore) {
 }
 
 function stage2Ctrl($scope, $location, Restangular, $cookieStore) {
-
+    //TODO Grab this from API
    $scope.occupations = new Array("Student", "Nurse", "Teacher");
 
    $scope.save = function() {
