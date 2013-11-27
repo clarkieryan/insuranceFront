@@ -62,10 +62,11 @@ function stage3Ctrl($scope, $location, Restangular, $cookieStore) {
     $scope.breakdownTypes = new Array("European", "UK Only", "Wolrdwide");
 
     $scope.save = function() {
+        console.log($scope.quote_details);
         Restangular.one('customers', $cookieStore.get('customer_id')).all('quotes').post($scope.quote_details).then(function(quote_details) {
           if(quote_details.code == "201"){
                 $cookieStore.put('quote_id', quote_details.quote.id);
-                $location.path('/stage4');
+                //$location.path('/stage4');
             } else {
                 alert("Server error");
             }

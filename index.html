@@ -149,13 +149,13 @@
                             </div>
                             <div>
                                 <label for="windscreenCover">Windscreen Cover</label>
-                                <input type="checkbox" name="windscreenCover" ng-model="quote_details.windscreenCover" required/>
+                                <input type="checkbox" name="windscreenCover" ng-model="quote_details.windscreenCover" />
                             </div>
                             <!-- TODO: Update API to allow for this -->
                             <div ng-show="quote_details.windscreenCover" class="tab">
                                 <label for="windscreenExcess">Windscreen Excess: </label>
                                 <span>£{{quote_details.windscreenExcess}}</span>
-                                <input type="range" min="0" max="500" step="50" ng-init="quote_details.windscreenExcess=0" name="policyExcess" ng-model="quote_details.windscreenExcess" required/>
+                                <input type="range" min="0" max="500" step="50" ng-init="quote_details.windscreenExcess=0" name="policyExcess" ng-model="quote_details.windscreenExcess"/>
                             </div>
                             <button type="submit" ng-click="save()" class="pure-button pure-button-primary">Next</button> 
                         </form>
