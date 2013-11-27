@@ -9,12 +9,12 @@ body, html {
 body,
 .pure-g [class *= "pure-u"],
 .pure-g-r [class *= "pure-u"] {
-    font-family:raleway;
+    font-family:Helvetica Neue;
     font-weight:200;
 }
 
 h1, h2, h3, h4, h5 {
-    font-family:raleway;
+    font-family:Helvetica Neue;
 }
 
 h2 {
@@ -104,7 +104,7 @@ ul {
 
 #main-content form div {
     display:block;
-    margin:10px 0;
+    margin:15px 0;
 }
 
 #quoteDetails h3 {
@@ -113,17 +113,29 @@ ul {
     border-bottom:#ccc 1px solid;
 }
 
-/*Form Stuff*/
-#getQuoteForm input {
-    width:150px;
+/*Side Form suff*/
+
+#getQuoteForm {
+    overflow:hidden;
 }
 
+#getQuoteForm label {
+    margin:5px 0;
+    display:inline-block;
+}
+
+#getQuoteForm input, #getQuoteForm button {
+    float: right;
+    clear:both;
+}
+
+/*Main Form Stuff*/
 #quoteForm {
     width:400px;
 }
 
-#quoteForm input, #quoteForm button {
-float: right;
+#quoteForm input, #quoteForm button, #quoteForm select {
+    float: right;
 }
 
 #quoteForm h3 {
@@ -132,6 +144,14 @@ float: right;
     border-bottom:#ccc 1px solid;
 }
 
+#quoteForm span {
+    float: right;
+    width: 40px;
+    margin-left: 20px;
+}
 
+#quoteForm .tab {
+    padding-left:20px;
+}
 
 

@@ -13,14 +13,15 @@ angular.module('insuranceFront', ['restangular', 'ngCookies', 'ngRoute']).
         //Question mark makes the id an optional route
       .when('/quote/:id?', {
         controller: quoteCtrl, 
-        templateUrl:'quote.html'
+        templateUrl:'quote.html',
+        resolve: quoteCtrl.resolve
       });
       
       RestangularProvider.setBaseUrl('http://localhost:3000/api/v1');
       RestangularProvider.setDefaultRequestParams({ access_token: '6be6ad797a4f8157d6703442403d134a' })
       RestangularProvider.setRestangularFields({
         id: '_id.$oid'
-      });
+        });
     RestangularProvider.setResponseExtractor(function(response, operation, what, url) {
         if (operation === "getList") {
             var newResponse = response;
@@ -48,14 +49,14 @@ function indexCtrl($scope, $location, Restangular, $cookieStore) {
 
 function stage2Ctrl($scope, $location, Restangular, $cookieStore) {
    $scope.save = function() {
-    Restangular.one('customers',    $cookieStore.get('customer_id')).all('customer_details').post($scope.customer_details).then(function(customer_details) {
+    Restangular.one('customers', $cookieStore.get('customer_id')).all('customer_details').post($scope.customer_details).then(function(customer_details) {
       $location.path('/stage3');
     });
   } 
 }
 
 function stage3Ctrl($scope, $location, Restangular, $cookieStore) {
-   //TODO Need to store the quote ID for retrieval
+
    $scope.save = function() {
     Restangular.one('customers', $cookieStore.get('customer_id')).all('quotes').post($scope.quote_details).then(function(quote_details) {
       
@@ -92,19 +93,46 @@ Restangular.one('customers',$cookieStore.get('customer_id')).one('quotes',$cooki
    } 
 }
 
-function quoteCtrl($scope, $location, Restangular, $cookieStore, $route) {
-    $scope.id = ($route.current.params.id == undefined) ? $cookieStore.get('quote_id') : $route.current.params.id;
+
+function quoteCtrl($scope, quote, $location, Restangular, $cookieStore, $route) {
+    $scope.quote = quote;
+    //Let's add in some plurlisation and ability to view incidents
+    console.log($scope.quote.incidents.length);
+    $scope.claimText = ($scope.quote.incidents.length > 1 || $scope.quote.incidents.length == 0) ? "Incidents" : "Incident";
+    //Some custom formatting for boolean values
+    $scope.quote.body.breakdownCover = ($scope.quote.body.breakdownCover == true) ? "Yes" : "No";
+    $scope.quote.body.windscreenCover = ($scope.quote.body.windscreenCover == true) ? "Yes" : "No";
     
-    $scope.quote = Restangular.one('quote', $scope.id).get();
-    console.log($scope.quote);
-    $scope.customer = Restangular.one('customers', $scope.customer_id).get()
-    $scope.customer_details = Restangular.one('customers', $scope.customer_id).one('customer_details').get();
+
 }
+
+quoteCtrl.resolve = {
+    quote: function($q, Restangular, $cookieStore, $route){
+        var id = ($route.current.params.id == undefined) ? $cookieStore.get('quote_id') : $route.current.params.id;
+        var quote = {};
+        var deferred = $q.defer();
+        Restangular.one('quote', id).get().then(function(response){
+            quote.body = response;
+            Restangular.one('quote', id).all('incidents').getList().then(function(incidents){
+                quote.incidents = incidents;
+            });
+            quote.customer = Restangular.one('customers', response.customer_id).get().then(function(customer){
+                quote.customer = customer;
+                quote.customer_details = Restangular.one('customers', customer.id).one('customer_details').get().then(function(customer_details){
+                    quote.customer_details = customer_details;
+                    deferred.resolve(quote)
+                });
+            });
+        });
+        return deferred.promise;
+    }
+};
 
 //Link Controller
 function linkCtrl($scope, $location) {
    $scope.getClass = function(path) {
-        if ($location.path().substr(0, path.length) == path) {
+        var location = $location.path();
+        if (location == path ) {
           return "active"
         } else {
           return ""
