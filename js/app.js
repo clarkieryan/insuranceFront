@@ -35,7 +35,6 @@ angular.module('insuranceFront', ['restangular', 'ngCookies', 'ngRoute']).
 
 function indexCtrl($scope, $location, Restangular, $cookieStore) {
   $scope.save = function() {
-    console.log($scope.customer);
     Restangular.all('customers').post($scope.customer).then(function(response) {
         if(response.code == "201"){
             $cookieStore.put('customer_id', response.customer.id);
@@ -89,7 +88,6 @@ function stage4Ctrl($scope, $location, Restangular, $cookieStore) {
    $scope.save = function() {
    $scope.incident = [];
    $scope.incident.incident = $scope.incidents;
-   console.log($scope.incident)
 Restangular.one('customers',$cookieStore.get('customer_id')).one('quotes',$cookieStore.get('quote_id')).all('incidents').post($scope.incident).then(function(incidents) {
         //Redirect to the end quote
         $location.path('/quote'); 
@@ -101,7 +99,6 @@ Restangular.one('customers',$cookieStore.get('customer_id')).one('quotes',$cooki
 function quoteCtrl($scope, quote, $location, Restangular, $cookieStore, $route) {
     $scope.quote = quote;
     //Let's add in some plurlisation and ability to view incidents
-    console.log($scope.quote.incidents.length);
     $scope.claimText = ($scope.quote.incidents.length > 1 || $scope.quote.incidents.length == 0) ? "Incidents" : "Incident";
     //Some custom formatting for boolean values
     $scope.quote.body.breakdownCover = ($scope.quote.body.breakdownCover == true) ? "Yes" : "No";
