@@ -48,6 +48,9 @@ function indexCtrl($scope, $location, Restangular, $cookieStore) {
 }
 
 function stage2Ctrl($scope, $location, Restangular, $cookieStore) {
+
+   $scope.occupations = new Array("Student", "Nurse", "Teacher");
+
    $scope.save = function() {
     Restangular.one('customers', $cookieStore.get('customer_id')).all('customer_details').post($scope.customer_details).then(function(customer_details) {
       $location.path('/stage3');
@@ -56,18 +59,19 @@ function stage2Ctrl($scope, $location, Restangular, $cookieStore) {
 }
 
 function stage3Ctrl($scope, $location, Restangular, $cookieStore) {
+    //TODO - Grab this from API
+    $scope.breakdownTypes = new Array("European", "UK Only", "Wolrdwide");
 
-   $scope.save = function() {
-    Restangular.one('customers', $cookieStore.get('customer_id')).all('quotes').post($scope.quote_details).then(function(quote_details) {
-      
-      if(quote_details.code == "201"){
-            $cookieStore.put('quote_id', quote_details.quote.id);
-            $location.path('/stage4');
-        } else {
-            alert("Server error");
-        }
-    });
-  }
+    $scope.save = function() {
+        Restangular.one('customers', $cookieStore.get('customer_id')).all('quotes').post($scope.quote_details).then(function(quote_details) {
+          if(quote_details.code == "201"){
+                $cookieStore.put('quote_id', quote_details.quote.id);
+                $location.path('/stage4');
+            } else {
+                alert("Server error");
+            }
+        });
+    }
 
 }
 

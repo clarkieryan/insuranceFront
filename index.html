@@ -69,14 +69,17 @@
                             </div>
                             <div>
                                 <label for="occupation">Occupation:</label>
-                                <input type="text" name="occupation" ng-model="customer_details.occupation" required>
+                                <select name="occupation" ng-model="customer_details.occupation" required>
+                                    <option value="" selected>Please select one:</option>
+                                    <option ng-repeat="occupation in occupations" value="{{occupation}}">{{occupation}}</option>
+                                </select>
                             </div>
                             <div>
                                 <label for="telNumber">Telephone Number:</label>
                                 <input type="tel" name="telNumber" ng-model="customer_details.telNumber" required/>
                             </div>
                             <div>
-                                <label for="street">Street Name:</label>
+                                <label for="street">Number &amp; Street:</label>
                                 <input type="text" name="street" ng-model="customer_details.street" required/>
                             </div>
                             <div>
@@ -92,7 +95,7 @@
                             <div>
                                 <label for="licenceType">Licence Type:</label>
                                 <select ng-model="customer_details.licenceType" name="licenceType">
-                                    <option value="" selected>Please choose one</option>
+                                    <option value="" selected>Please select one</option>
                                     <option value="full">Full</option>
                                     <option value="provisional">Provisional</option>
                                 </select>
@@ -138,8 +141,10 @@
                             </div>
                             <div ng-show="quote_details.breakdownCover" class="tab">
                                 <label for="breakdownExcess">Breakdown Excess: </label>
-                                <span>£{{quote_details.breakdownExcess}}</span>
-                                <input type="range" min="0" max="500" step="50" ng-init="quote_details.breakdownExcess=0" name="policyExcess" ng-model="quote_details.breakdownExcess" required/>
+                                <select name="breakdownType" ng-model="quote_details.breakdownType">
+                                    <option value="" selected>Please select one:</option>
+                                    <option ng-repeat="breakdownType in breakdownTypes" value="{{breakdownType}}">{{breakdownType}}</option>
+                                </select>
                             </div>
                             <div>
                                 <label for="windscreenCover">Windscreen Cover</label>
