@@ -140,7 +140,7 @@
                                 <input type="checkbox" name="breakdownCover" ng-model="quote_details.breakdownCover" ng-change="toggleSlider()" required/>
                             </div>
                             <div ng-show="quote_details.breakdownCover" class="tab">
-                                <label for="breakdownExcess">Breakdown Excess: </label>
+                                <label for="breakdownExcess">Breakdown Cover Type: </label>
                                 <select name="breakdownType" ng-model="quote_details.breakdownType">
                                     <option value="" selected>Please select one:</option>
                                     <option ng-repeat="breakdownType in breakdownTypes" value="{{breakdownType}}">{{breakdownType}}</option>
