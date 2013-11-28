@@ -26,12 +26,13 @@ function stage2Ctrl($scope, $location, Restangular, $cookieStore) {
     //TODO Grab this from API
     $scope.occupations = new Array("Student", "Nurse", "Teacher");
 
-   $scope.save = function() {
-    Restangular.one('customers', $cookieStore.get('customer_id')).all('customer_details').post($scope.customer_details).then(function(customer_details) {
-      $location.path('/stage3');
-    });
-  }
+    $scope.save = function() {
+        Restangular.one('customers', $cookieStore.get('customer_id')).all('customer_details').post($scope.customer_details).then(function(customer_details) {
+            $location.path('/stage3');
+        });
+    }
 }
+
 /*
 * Stage 3 Controller
 * This controller attributes a quote details to a customer
@@ -46,7 +47,7 @@ function stage3Ctrl($scope, $location, Restangular, $cookieStore) {
         Restangular.one('customers', $cookieStore.get('customer_id')).all('quotes').post($scope.quote_details).then(function(quote_details) {
           if(quote_details.code == "201"){
                 $cookieStore.put('quote_id', quote_details.quote.id);
-                //$location.path('/stage4');
+                $location.path('/stage4');
             } else {
                 alert("Server error");
             }

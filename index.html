@@ -202,8 +202,8 @@
                 <script type="text/ng-template" id="quote.html">
                     <div>
                         <h1>Your Quote #QR000000{{quote.body.id}}</h1>
-                        <h2>Premium: £xxx.xx</h2>
-                        <h3>Per Month: £xx.xx</h3>
+                        <h2>Premium: £{{quote.body.premium }}</h2>
+                        <h3>Per Month: £{{(quote.body.premium / 12)| number:2}}</h3>
                         <br />
                         <div id="quoteDetails">
                             <h3>Personal Details</h3>

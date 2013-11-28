@@ -18,7 +18,7 @@ angular.module('insuranceFront', ['restangular', 'ngCookies', 'ngRoute']).
       });
       
       RestangularProvider.setBaseUrl('http://localhost:3000/api/v1');
-      RestangularProvider.setDefaultRequestParams({ access_token: 'c4e3ed4296a4f4d41945f7e956451411' })
+      RestangularProvider.setDefaultRequestParams({ access_token: 'd6678ddd5f51b33dcd76a09bc47f7340' })
       RestangularProvider.setRestangularFields({
         id: '_id.$oid'
         });
