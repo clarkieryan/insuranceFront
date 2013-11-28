@@ -87,6 +87,10 @@
                                 <input type="text" name="city" ng-model="customer_details.city" required/>
                             </div>
                             <div>
+                                <label for="county">County:</label>
+                                <input type="text" name="count" ng-model="customer_details.county" required/>
+                            </div>
+                            <div>
                                 <label for="postcode">Post Code:</label>
                                 <input type="text" name="postcode" ng-model="customer_details.postCode" required/>
                             </div>
@@ -151,7 +155,6 @@
                                 <label for="windscreenCover">Windscreen Cover</label>
                                 <input type="checkbox" name="windscreenCover" ng-model="quote_details.windscreenCover" />
                             </div>
-                            <!-- TODO: Update API to allow for this -->
                             <div ng-show="quote_details.windscreenCover" class="tab">
                                 <label for="windscreenExcess">Windscreen Excess: </label>
                                 <span>£{{quote_details.windscreenExcess}}</span>
