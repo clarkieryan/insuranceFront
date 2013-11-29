@@ -102,6 +102,7 @@ function quoteCtrl($scope, quote, $location, Restangular, $cookieStore, $route) 
 * This resolver ensures all the relevant data is resolved before the view is populated.
 */
 quoteCtrl.resolve = {
+
     quote: function($q, Restangular, $cookieStore, $route){
         var id = ($route.current.params.id == undefined) ? $cookieStore.get('quote_id') : $route.current.params.id;
         var quote = {};
@@ -115,6 +116,7 @@ quoteCtrl.resolve = {
                 quote.customer = customer;
                 quote.customer_details = Restangular.one('customers', customer.id).one('customer_details').get().then(function(customer_details){
                     quote.customer_details = customer_details;
+                    console.log(quote);
                     deferred.resolve(quote)
                 });
             });
