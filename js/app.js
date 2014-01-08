@@ -11,14 +11,14 @@ angular.module('insuranceFront', ['restangular', 'ngCookies', 'ngRoute']).
       .when('/stage4', { 
         controller:stage4Ctrl, templateUrl:'stage4.html'})
         //Question mark makes the id an optional route
-      .when('/quote/:id?', {
+      .when('/quote/:email?/:id?', {
         controller: quoteCtrl, 
         templateUrl:'quote.html',
         resolve: quoteCtrl.resolve
       });
       
       RestangularProvider.setBaseUrl('http://localhost:3000/api/v1');
-      RestangularProvider.setDefaultRequestParams({ access_token: 'd6678ddd5f51b33dcd76a09bc47f7340' })
+      RestangularProvider.setDefaultRequestParams({ access_token: '52ffb9f962d1e4e24df41369ba6e394c' });
       RestangularProvider.setRestangularFields({
         id: '_id.$oid'
         });
@@ -30,6 +30,3 @@ angular.module('insuranceFront', ['restangular', 'ngCookies', 'ngRoute']).
         return response;
     });
 });
-
-
-

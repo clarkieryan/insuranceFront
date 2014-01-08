@@ -6,12 +6,20 @@
 
 function indexCtrl($scope, $location, Restangular, $cookieStore) {
   $scope.save = function() {
+     if (!$scope.quoteForm.$valid) return false;
     Restangular.all('customers').post($scope.customer).then(function(response) {
         if(response.code == "201"){
             $cookieStore.put('customer_id', response.customer.id);
+            $cookieStore.put('customer_email', response.customer.email);
             $location.path('/stage2');
         } else {
-            alert("Server error");
+            //TODO Add in validation for non-unique emails
+            alert("Validation error");
+        }
+    }, function(response){
+        console.log("Error with status code" + response.status);
+        if(response.status == "422"){
+            alert("The email address has already been taken");
         }
     });
   }
@@ -27,9 +35,12 @@ function stage2Ctrl($scope, $location, Restangular, $cookieStore) {
     $scope.occupations = new Array("Student", "Nurse", "Teacher");
 
     $scope.save = function() {
+        if (!$scope.quoteForm.$valid) return false;
         Restangular.one('customers', $cookieStore.get('customer_id')).all('customer_details').post($scope.customer_details).then(function(customer_details) {
             $location.path('/stage3');
-        });
+        }, function(response){
+        console.log("Error with status code" + response.code);
+    });
     }
 }
 
@@ -43,7 +54,7 @@ function stage3Ctrl($scope, $location, Restangular, $cookieStore) {
     $scope.breakdownTypes = new Array("European", "UK Only", "Wolrdwide");
 
     $scope.save = function() {
-        console.log($scope.quote_details);
+         if (!$scope.quoteForm.$valid) return false;
         Restangular.one('customers', $cookieStore.get('customer_id')).all('quotes').post($scope.quote_details).then(function(quote_details) {
           if(quote_details.code == "201"){
                 $cookieStore.put('quote_id', quote_details.quote.id);
@@ -51,9 +62,10 @@ function stage3Ctrl($scope, $location, Restangular, $cookieStore) {
             } else {
                 alert("Server error");
             }
-        });
+        }, function(response){
+        console.log("Error with status code" + response.code);
+    });
     }
-
 }
 
 /*
@@ -72,12 +84,15 @@ function stage4Ctrl($scope, $location, Restangular, $cookieStore) {
         $scope.incidents.splice(index, 1);
     }
 
-   $scope.save = function() {
-   $scope.incident = [];
-   $scope.incident.incident = $scope.incidents;
-Restangular.one('customers',$cookieStore.get('customer_id')).one('quotes',$cookieStore.get('quote_id')).all('incidents').post($scope.incident).then(function(incidents) {
+    $scope.save = function() {
+    $scope.incident = [];
+    $scope.incident.incident = $scope.incidents;
+    
+    Restangular.one('customers',$cookieStore.get('customer_id')).one('quotes',$cookieStore.get('quote_id')).all('incidents').post($scope.incident).then(function(incidents) {
         //Redirect to the end quote
         $location.path('/quote');
+    }, function(response){
+        console.log("Error with status code" + response.code);
     });
    }
 }
@@ -87,14 +102,16 @@ Restangular.one('customers',$cookieStore.get('customer_id')).one('quotes',$cooki
 * This controller outputs a quote with all the relevant data installed
 */
 function quoteCtrl($scope, quote, $location, Restangular, $cookieStore, $route) {
+    //TODO Need to render error if the quote is not found.
     $scope.quote = quote;
-    //Let's add in some plurlisation and ability to view incidents
-    $scope.claimText = ($scope.quote.incidents.length > 1 || $scope.quote.incidents.length == 0) ? "Incidents" : "Incident";
-    //Some custom formatting for boolean values
-    $scope.quote.body.breakdownCover = ($scope.quote.body.breakdownCover == true) ? "Yes" : "No";
-    $scope.quote.body.windscreenCover = ($scope.quote.body.windscreenCover == true) ? "Yes" : "No";
-
-
+    //Don't work out view logic if the quote could not be found
+    if(quote.show){
+        //Let's add in some plurlisation and ability to view incidents
+        $scope.claimText = ($scope.quote.incidents.length > 1 || $scope.quote.incidents.length == 0) ? "Incidents" : "Incident";
+        //Some custom formatting for boolean values
+        $scope.quote.body.breakdownCover = ($scope.quote.body.breakdownCover == true) ? "Yes" : "No";
+        $scope.quote.body.windscreenCover = ($scope.quote.body.windscreenCover == true) ? "Yes" : "No";
+    }
 }
 
 /*
@@ -102,24 +119,18 @@ function quoteCtrl($scope, quote, $location, Restangular, $cookieStore, $route) 
 * This resolver ensures all the relevant data is resolved before the view is populated.
 */
 quoteCtrl.resolve = {
-
+    
+//  TODO Need to add in validation from the emailz as well
     quote: function($q, Restangular, $cookieStore, $route){
+        //Check to see if I'm pulling in a quote from the search or a users generated quote, and then set the appropriate variables.
         var id = ($route.current.params.id == undefined) ? $cookieStore.get('quote_id') : $route.current.params.id;
-        var quote = {};
+        var email = ($route.current.params.email == undefined) ? $cookieStore.get('customer_email') : $route.current.params.email;
+        
         var deferred = $q.defer();
-        Restangular.one('quote', id).get().then(function(response){
-            quote.body = response;
-            Restangular.one('quote', id).all('incidents').getList().then(function(incidents){
-                quote.incidents = incidents;
-            });
-            quote.customer = Restangular.one('customers', response.customer_id).get().then(function(customer){
-                quote.customer = customer;
-                quote.customer_details = Restangular.one('customers', customer.id).one('customer_details').get().then(function(customer_details){
-                    quote.customer_details = customer_details;
-                    console.log(quote);
-                    deferred.resolve(quote)
-                });
-            });
+        //Get all the quote details and return those to the view
+        Restangular.one('quote', email).one(id).get().then(function(quote){
+            quote.show = (quote.customer != null && quote.body != null) ? true : false;
+            deferred.resolve(quote);
         });
         return deferred.promise;
     }
@@ -131,7 +142,8 @@ quoteCtrl.resolve = {
 function linkCtrl($scope, $location) {
    $scope.getClass = function(path) {
         var location = $location.path();
-        if (location == path ) {
+        location = location.split("/");
+        if (location[1] == path ) {
           return "active"
         } else {
           return ""

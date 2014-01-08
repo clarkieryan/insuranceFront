@@ -3,7 +3,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Insurance 'R' Us</title>
-        
         <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
         <link rel="stylesheet" href="css/style.css" />
     </head>
@@ -12,24 +11,22 @@
             <div class="pure-u" id="actionBar">
                 <div>
                     <h1>Insurance 'R' Us</h1>
-                    
                     <h3>Either get a previous quote</h3>
                     <div id="getQuoteForm">
-                            <form action="#/quote/{{quoteID}}" method="post">
+                            <form action="#/quote/{{quoteEmail}}/{{quoteID}}" method="post">
                                 <label for="quoteRef">Quote ref:  </label><input type="text" name="quoteRef" ng-model="quoteID" />
                                 <br />
-                                <label for="email">Email:  </label><input type="text" name="email" ng-model="email" />
+                                <label for="email">Email:  </label><input type="text" name="email" ng-model="quoteEmail" />
                                 <button type="submit" class="pure-button pure-button-primary">Get Quote</button> 
                             </form>
-    
                     </div>
                     <h2>OR</h2>
                     <h3>Start a new quote -></h3>
                     <ul data-ng-controller="linkCtrl">
-                        <li ng-class="getClass('/')" >General Information</li>
-                        <li ng-class="getClass('/stage2')" >Customer Information</li>
-                        <li ng-class="getClass('/stage3')">Quote Details</li>
-                        <li ng-class="getClass('/stage4')">Incidents</li>
+                        <li ng-class="getClass('')" >General Information</li>
+                        <li ng-class="getClass('stage2')" >Customer Information</li>
+                        <li ng-class="getClass('stage3')">Quote Details</li>
+                        <li ng-class="getClass('stage4')">Incidents</li>
                         <li  ng-class="getClass('quote')">Your Quote</li>
                     </ul>
                 </div>
@@ -40,7 +37,17 @@
                 <script type="text/ng-template" id="index.html">
                     <div>
                         <h1>General information</h1>
-                        <form id="quoteForm">
+                        <form id="quoteForm" name="quoteForm">
+                            <div>
+                                <label for="title">Title:</label>
+                                <select name="title" ng-model="customer.title">
+                                    <option value="">Please select one</option>
+                                    <option value="Mr">Mr</option>
+                                    <option value="Mrs">Mrs</option>
+                                    <option value="Dr">Dr</option>
+                                    <option value="Sir">Sir</option>
+                                </select>
+                            </div>
                             <div>
                                 <label for="forename">First Name:</label>
                                 <input type="text" name="forename" ng-model="customer.forename" required/>
@@ -61,7 +68,7 @@
                 <script type="text/ng-template" id="stage2.html">
                     <div>
                         <h1>Customer Information</h1>
-                        <form id="quoteForm">
+                        <form id="quoteForm" name="quoteForm">
                             <h3>Personal information</h3>
                             <div>
                                 <label for="dob">Date Of Birth:</label>
@@ -115,7 +122,7 @@
                 </script>
                 <script type="text/ng-template" id="stage3.html">
                     <h1>Quote Details</h1>
-                    <form id="quoteForm">
+                    <form id="quoteForm"  name="quoteForm">
                             <div>
                                 <label for="vehicleReg">Vehicle Registration</label>
                                 <input type="text" name="vehicleReg" ng-model="quote_details.vehicleReg" required/>
@@ -165,7 +172,7 @@
                 </script>
                 <script type="text/ng-template" id="stage4.html">
                     <h1>Quote Details</h1>
-                    <form id="quoteForm">
+                    <form id="quoteForm" name="quoteForm">
                             <a href="" ng-click="addIncident()" >Add an incident</a> (If no incidents proceed to next step)
                             <br />
                             <br />
@@ -190,7 +197,7 @@
                                 <div>
                                     <label for="type">Type of Incident</label>
                                     <!-- Radio -->
-                                    <input type="text" name="type" ng-model="incident.type" required/>
+                                    <input type="text" name="type" ng-model="incident.incidentType" required/>
                                 </div>
                             </div>  
                             <button type="submit" ng-click="save()" class="pure-button pure-button-primary">Next</button> 
@@ -199,7 +206,7 @@
                 </script>
                 
                 <script type="text/ng-template" id="quote.html">
-                    <div>
+                    <div ng-show="quote.show">
                         <h1>Your Quote #QR000000{{quote.body.id}}</h1>
                         <h2>Premium: £{{quote.body.premium }}</h2>
                         <h3>Per Month: £{{(quote.body.premium / 12)| number:2}}</h3>
@@ -246,6 +253,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div ng-hide="quote.show">
+                        <h1>Couldn't find the quote specified</h1>
                     </div>
                 </script>
             </div>
